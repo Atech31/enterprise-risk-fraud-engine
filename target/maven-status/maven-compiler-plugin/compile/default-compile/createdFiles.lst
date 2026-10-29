@@ -1,0 +1,5 @@
+com/fraud/repository/TransactionRepository.class
+com/fraud/EnterpriseRiskFraudEngineApplication.class
+com/fraud/controller/TransactionController.class
+com/fraud/service/FraudEvaluationService.class
+com/fraud/model/Transaction.class

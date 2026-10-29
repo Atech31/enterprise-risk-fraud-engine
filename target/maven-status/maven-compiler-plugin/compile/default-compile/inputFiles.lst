@@ -1,0 +1,5 @@
+/workspaces/enterprise-risk-fraud-engine/src/main/java/com/fraud/repository/TransactionRepository.java
+/workspaces/enterprise-risk-fraud-engine/src/main/java/com/fraud/controller/TransactionController.java
+/workspaces/enterprise-risk-fraud-engine/src/main/java/com/fraud/service/FraudEvaluationService.java
+/workspaces/enterprise-risk-fraud-engine/src/main/java/com/fraud/model/Transaction.java
+/workspaces/enterprise-risk-fraud-engine/src/main/java/com/fraud/EnterpriseRiskFraudEngineApplication.java
