@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class FraudEvaluationService {
@@ -18,25 +19,34 @@ public class FraudEvaluationService {
             transaction.setTimestamp(LocalDateTime.now());
         }
 
-        // Rule-based heuristic risk scoring engine
         double score = 0.0;
         
-        // High amount checks
+        // Rule 1: High Amount Thresholds
         if (transaction.getAmount() > 10000.0) {
             score += 50.0;
         } else if (transaction.getAmount() > 5000.0) {
             score += 25.0;
         }
 
-        // High risk merchant categories
+        // Rule 2: High Risk Categories
         if ("CRYPTO".equalsIgnoreCase(transaction.getMerchantCategory()) || 
             "GAMBLING".equalsIgnoreCase(transaction.getMerchantCategory())) {
             score += 30.0;
         }
 
+        // Rule 3: Velocity Check (Anomalous activity in the last 10 minutes)
+        LocalDateTime tenMinutesAgo = transaction.getTimestamp().minusMinutes(10);
+        List<Transaction> recentTransactions = transactionRepository.findByAccountIdAndTimestampAfter(
+            transaction.getAccountId(), tenMinutesAgo
+        );
+
+        if (recentTransactions.size() >= 3) {
+            score += 40.0; // High velocity penalty
+        }
+
         transaction.setRiskScore(score);
 
-        // Assign risk status
+        // Assign risk status based on accumulated score
         if (score >= 50.0) {
             transaction.setRiskStatus("FLAGGED");
         } else {
@@ -44,5 +54,9 @@ public class FraudEvaluationService {
         }
 
         return transactionRepository.save(transaction);
+    }
+
+    public List<Transaction> getAccountHistory(String accountId) {
+        return transactionRepository.findByAccountId(accountId);
     }
 }
